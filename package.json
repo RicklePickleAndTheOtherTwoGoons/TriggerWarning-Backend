@@ -1,0 +1,31 @@
+{
+  "name": "triggerwarning-backend",
+  "version": "0.0.1",
+  "description": "Backend for the TriggerWarning Game",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RicklePickleAndTheOtherTwoGoons/TriggerWarning-Backend.git"
+  },
+  "keywords": [
+    "cardsagainsthumanity",
+    "trigger",
+    "warning",
+    "game"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RicklePickleAndTheOtherTwoGoons/TriggerWarning-Backend/issues"
+  },
+  "homepage": "https://github.com/RicklePickleAndTheOtherTwoGoons/TriggerWarning-Backend#readme",
+  "dependencies": {
+    "ioredis": "^2.5.0",
+    "mongoose": "^4.9.3",
+    "restify": "^4.3.0",
+    "socket.io": "^1.7.3"
+  }
+}
