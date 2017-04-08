@@ -1,6 +1,8 @@
 /**
  * Created by chandler on 4/7/17.
  */
+var Redis = require('ioredis');
+var redis = new Redis(process.env.redisUrl);
 var Game = require('../models/game.js');
 var Cardset = require('../models/cardset.js');
 
@@ -13,12 +15,9 @@ function makeid() {
     return text;
 }
 
-console.log(makeid());
-
 function newGame(socket, cardsets, playerLimit, scoreLimit) {
     var whiteCards = [];
     var blackCards = [];
-    console.log("Socket ID: "+socket.id);
     for (var i=0;i<cardsets.length;i++) {
         Cardset.findById(cardsets[i], function(err, cardset) {
             if (err) console.log(err);
@@ -35,6 +34,8 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
         host: socket.id,
         roomCode: makeid()
     }).save(function (err, game) {
+            redis.sadd('game:'+game._id+":blackcards", blackCards);
+            redis.sadd('game:'+game._id+":whitecards", whiteCards);
             if (err) console.log(err);
             socket.emit('gameCreated', game)
         })
