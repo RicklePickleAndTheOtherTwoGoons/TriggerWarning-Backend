@@ -4,7 +4,8 @@
 var Cardset = require('../models/cardset.js');
 var Redis = require('ioredis');
 var redis = new Redis(process.env.redisUrl);
-//TODO: dont do this. Properly export logger 
+//TODO: dont do this. Properly export logger
+var bunyan = require('bunyan');
 var log = bunyan.createLogger({name:'triggerwarning'});
 
 function createCardset(req, res, next) {
