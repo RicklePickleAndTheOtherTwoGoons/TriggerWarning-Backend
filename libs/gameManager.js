@@ -39,12 +39,6 @@ function newGame(socket, cardsets, scorelimit) {
             return game
         })
 }
-var test={};
-test.id = "4938uf89uwfe";
-
-
-newGame(test,["58e84898d4a1ab001158fc25"]);
-
 
 
 module.exports = function(io) {
@@ -52,7 +46,8 @@ module.exports = function(io) {
         console.log('New socket connection: '+socket);
         socket.on('roomCreate', function(data) {
             console.log(data);
-            socket.emit('roomCreated',newGame(socket,data.cardsets,data.playerLimit))
+            var room = newGame(socket, data.cardsets, data.playerLimit)
+            socket.emit('roomCreated',room)
         })
     });
 };
