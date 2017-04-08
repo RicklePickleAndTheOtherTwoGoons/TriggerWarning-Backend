@@ -15,7 +15,7 @@ function makeid() {
 
 console.log(makeid());
 
-function newGame(socket, cardsets, scorelimit) {
+function newGame(socket, cardsets, playerLimit, scoreLimit) {
     var whiteCards = [];
     var blackCards = [];
     console.log("Socket ID: "+socket.id);
@@ -30,12 +30,12 @@ function newGame(socket, cardsets, scorelimit) {
         activeCardsets: cardsets,
         whiteCards: whiteCards,
         blackCards: blackCards,
-        scoreLimit: scorelimit || 10,
+        scoreLimit: scoreLimit || 10,
+        playerLimit: playerLimit || 10,
         host: socket.id,
         roomCode: makeid()
     }).save(function (err, game) {
             if (err) console.log(err);
-            console.log('We made a game: '+game);
             socket.emit('gameCreated', game)
         })
 }
@@ -44,7 +44,7 @@ function newGame(socket, cardsets, scorelimit) {
 module.exports = function(io) {
     io.on('connection', function (socket) {
         socket.on('gameCreate', function(data) {
-            newGame(socket, data.cardsets, data.playerLimit);
+            newGame(socket, data.cardsets, data.playerLimit, data.scoreLimit);
         })
     });
 };
