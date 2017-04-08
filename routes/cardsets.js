@@ -29,8 +29,8 @@ function addCardToCardset(req,res,next) {
             console.log(card);
             if (err) res.status(503, err);
             if (err) log.error(err);
-            if (card.type="white") {cardset.whiteCards.push(card._id)}
-            if (card.type="black") {cardset.blackCards.push(card._id)}
+            if (card.type=="white") {cardset.whiteCards.push(card._id)}
+            if (card.type=="black") {cardset.blackCards.push(card._id)}
             cardset.save(function(err,cardsetU) {
                 if (err) res.send(503, err)
                 if (err) console.log(err)
