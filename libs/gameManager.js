@@ -22,13 +22,10 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
     var index = 0;
 
     async.whilst(function() {
-        return index <= cardsets.length
+        return index < cardsets.length
     }, function(next) {
         Cardset.findById(cardsets[index], function(err, cardset) {
             if (err) console.log(err);
-            console.log(cardset);
-            console.log(cardset.whiteCards.length);
-            console.log(cardset.blackCards.length);
             whiteCards.push(cardset.whiteCards);
             blackCards.push(cardset.blackCards);
             index++;
@@ -52,7 +49,6 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
             })
     });
 }
-
 
 module.exports = function(io) {
     io.on('connection', function (socket) {
