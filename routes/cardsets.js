@@ -10,11 +10,11 @@ var bunyan = require('bunyan');
 var log = bunyan.createLogger({name:'triggerwarning'});
 
 function createCardset(req, res, next) {
-    console.log("Temp params for John: "+req.body);
+    console.log("Temp params for John: "+req.body.name);
     cardset = new Cardset({
         name: req.body.name,
-        desc: req.body.desc || '',
-        vendor: req.body.pick || 'official'
+        desc: req.body.desc,
+        vendor: req.body.pick
     });
     cardset.save(function (err, success) {
         if (err) res.send(503, err);
