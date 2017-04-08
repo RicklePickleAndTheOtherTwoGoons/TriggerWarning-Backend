@@ -66,11 +66,16 @@ function gameLeave(socket, game) {
     redis.srem('game:'+game._id+":activeusers", socket.id)
 }
 
-function gameStart(socket, game) {
-    redis.spop("game:"+game._id+":whitecards", 10, function(err, cards) {
-        if (err) console.log(err);
-        socket.emit('firstHand', cards)
-    })
+function gameStart(io, clients, game) {
+    console.log('beginning game start');
+    for (var i=0; i<clients.length;i++) {
+        console.log('starting prep for client: '+clients[i]);
+        redis.spop("game:"+game._id+":whitecards", 10, function(err, cards) {
+            if (err) console.log(err);
+            console.log(cards);
+            io.to(clients[i]).emit('firstHand', cards);
+        })
+    }
 }
 
 module.exports = function(io) {
@@ -89,7 +94,7 @@ module.exports = function(io) {
                 if (game==null) {
                     socket.emit('error', {text:"Bad room code"})
                 } else {
-                    socket.emit('targetGame',game);
+                    socket.emit('gameJoined',game);
                     currentGame = game;
                     socket.join(game._id);
                     io.in(game._id).emit('playerJoin', {name:socket.id});
@@ -103,11 +108,13 @@ module.exports = function(io) {
             })
         });
         socket.on('gameStart', function() {
-            console.log('Game start was requested')
-            gameStart(socket, currentGame);
-        })
+            console.log('Game start was requested');
+            io.in(currentGame._id).clients(function(err,clients) {
+                gameStart(io, clients, currentGame);
+            });
+        });
         socket.on('disconnect', function(data) {
-            gameLeave(socket, currentGame)
+            gameLeave(io, currentGame)
         })
     });
 };
