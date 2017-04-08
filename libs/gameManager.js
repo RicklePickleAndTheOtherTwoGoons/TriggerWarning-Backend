@@ -117,10 +117,15 @@ module.exports = function(io) {
             })
         });
         socket.on('gameStart', function() {
-            console.log('Game start was requested');
-            io.in(currentGame._id).clients(function(err,clients) {
-                gameStart(io, clients, currentGame);
-            });
+            if (socket.id == currentGame.host) {
+                console.log('Game start was requested');
+                io.in(currentGame._id).clients(function(err,clients) {
+                    gameStart(io, clients, currentGame);
+                });
+            } else {
+                console.log('Socket '+socket.id+' tried to start the game prematurely')
+            }
+
         });
         socket.on('disconnect', function(data) {
             gameLeave(io, currentGame)
