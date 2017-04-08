@@ -6,6 +6,7 @@ var gameSchema = mongoose.Schema({
     activeCardSets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Cardset'}],
     whiteCards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Card'}],
     blackCards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Card'}],
+    host: {type:string},
     rounds: [{
         roundNumber: {type:number},
         blackCard: {type:mongoose.Schema.Types.ObjectId, ref: 'Card'},

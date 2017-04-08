@@ -66,7 +66,7 @@ function readAllCardsets(req, res, next) {
 PATH = '/api/cardsets';
 module.exports = function(server) {
     server.post({path: PATH, version: '0.0.1'}, createCardset);
-    server.get({path: PATH+'/:cardset'+'/add'+'/:card', version: '0.0.1'}, addCardToCardset);
     server.get({path: PATH, version: '0.0.1'}, readAllCardsets);
     server.get({path: PATH + '/:id', version: '0.0.1'}, readOneCardset);
+    server.get({path: PATH+'/:cardset'+'/add'+'/:card', version: '0.0.1'}, addCardToCardset);
 };
