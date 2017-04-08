@@ -30,6 +30,7 @@ mongoose.connect(process.env.mongoUrl, function(err) {
 
 var io = require('socket.io')(server.server);
 io.on('connection', function (socket) {
+    log.info('New socket connection');
     socket.emit('news', { hello: 'world' });
     socket.on('my other event', function (data) {
         console.log(data);
