@@ -36,17 +36,15 @@ function newGame(socket, cardsets, scorelimit) {
     }).save(function (err, game) {
             if (err) console.log(err);
             console.log('We made a game: '+game);
-            return game
+            socket.emit('gameCreated', game)
         })
 }
 
 
 module.exports = function(io) {
     io.on('connection', function (socket) {
-        socket.on('roomCreate', function(data) {
-            var room = newGame(socket, data.cardsets, data.playerLimit);
-            console.log("Room: "+room);
-            socket.emit('roomCreated',room)
+        socket.on('gameCreate', function(data) {
+            newGame(socket, data.cardsets, data.playerLimit);
         })
     });
 };
