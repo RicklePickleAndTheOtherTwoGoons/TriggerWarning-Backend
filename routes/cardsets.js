@@ -13,8 +13,8 @@ function createCardset(req, res, next) {
     console.log("Temp params for John: "+req.body);
     cardset = new Cardset({
         name: req.body.name,
-        desc: req.body.desc,
-        vendor: req.body.pick
+        desc: req.body.desc || '',
+        vendor: req.body.pick || 'official'
     });
     cardset.save(function (err, success) {
         if (err) res.send(503, err);
