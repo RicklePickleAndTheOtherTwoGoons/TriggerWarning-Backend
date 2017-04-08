@@ -5,6 +5,7 @@ var Redis = require('ioredis');
 var redis = new Redis(process.env.redisUrl);
 var log = bunyan.createLogger({name:'triggerwarning'});
 var server = restify.createServer({name: 'TriggerWarning-Backend',version: '0.0.1'});
+
 server.listen(process.env.webPort || process.env.PORT || 8080, process.env.webAddress || '0.0.0.0', function() {
     log.info(server.name+' listening at '+server.url);
 });
@@ -26,5 +27,14 @@ server.use(function crossOrigin(req,res,next){
 mongoose.connect(process.env.mongoUrl, function(err) {
     if (err) log.fatal('Error connecting to MongoDB: ' + err); else log.info('Successfully connected to MongoDB')
 });
+
+var io = require('socket.io')(server.server);
+io.on('connection', function (socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function (data) {
+        console.log(data);
+    });
+});
+
 require('./routes/cards.js')(server);
 require('./routes/cardsets.js')(server);
