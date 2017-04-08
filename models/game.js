@@ -6,20 +6,21 @@ var gameSchema = mongoose.Schema({
     activeCardSets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Cardset'}],
     whiteCards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Card'}],
     blackCards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Card'}],
-    host: {type:string},
+    host: {type:String},
+    roomCode: {type:String},
     rounds: [{
-        roundNumber: {type:number},
+        roundNumber: {type:Number},
         blackCard: {type:mongoose.Schema.Types.ObjectId, ref: 'Card'},
         userSubmissions: [{
-            user: {type: string},
+            user: {type: String},
             whiteCard: {type:mongoose.Schema.Types.ObjectId, ref: 'Card'},
-            czarPick: {type:bool}
+            czarPick: {type:Boolean}
         }]
     }],
-    roundStart: {type:date, default: Date.now()},
-    roundEnd: {type: date},
-    scoreLimit: {type:number, default: 10},
-    playerLimit: {type:number, default: 8},
-    completed: {type:bool}
+    roundStart: {type:Date, default: Date.now()},
+    roundEnd: {type: Date},
+    scoreLimit: {type:Number, default: 10},
+    playerLimit: {type:Number, default: 8},
+    completed: {type:Boolean}
 });
 module.exports = mongoose.model('Game', gameSchema);
