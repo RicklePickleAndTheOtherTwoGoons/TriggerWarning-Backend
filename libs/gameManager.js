@@ -16,7 +16,7 @@ function makeid() {
     return text;
 }
 
-function newGame(socket, cardsets, playerLimit, scoreLimit) {
+function newGame(socket, cardsets, playerLimit, scoreLimit, callback) {
     var whiteCards = [];
     var blackCards = [];
     var index = 0;
@@ -45,15 +45,21 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
                 if (err) console.log(err);
                 redis.sadd('game:'+game._id+":blackcards", blackCards);
                 redis.sadd('game:'+game._id+":whitecards", whiteCards);
-                socket.emit('gameCreated', game)
+                callback(game);
             })
     });
+}
+
+function roundBegin(socket) {
+
 }
 
 module.exports = function(io) {
     io.on('connection', function (socket) {
         socket.on('gameCreate', function(data) {
-            newGame(socket, data.cardSets, data.playerLimit, data.scoreLimit);
+            newGame(socket, data.cardSets, data.playerLimit, data.scoreLimit, function(game) {
+                socket.emit('gameCreated', game)
+            });
         })
     });
 };

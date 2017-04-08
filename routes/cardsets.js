@@ -43,18 +43,22 @@ function readOneCardset(req, res, next) {
     redis.get('cache:cardsets:'+req.params.id, function(err, success) {
         if (err) log.error(err);
         if (success == null) {
-            Cardset.findById(req.params.id, function(err, cardset) {
+            var query=Cardset.find();
+            query.where({_id: req.params.id});
+            if (req.query.population) query.populate('blackCards whiteCards');
+            query.exec(function (err, cardset) {
                 if (err) res.status(503, err);
                 if (err) log.error(err);
                 redis.set('cache:cardsets:'+req.params.id, JSON.stringify(cardset));
                 redis.expire('cache:cardsets:'+req.params.id, 43200);
                 res.header('X-Cache', 'Miss');
                 res.send(200, cardset)
-            })
+            });
         } else {
             res.header('X-Cache', 'Hit');
             res.send(200, JSON.parse(success))
         }
+        //TODO: Un-Fuck caching mechanism
         res.send(503, 'Request Error')
     })
 }
