@@ -61,6 +61,7 @@ function readOneCardset(req, res, next) {
 function readAllCardsets(req, res, next) {
     var query = Cardset.find();
     if (req.query.text) query.where({text: new RegExp(req.query.text, "i")});
+    if (req.query.population) query.populate('Card');
     query.limit(req.query.limit || 20);
     query.exec(function (err, cardsets) {
         if (err) return next(err);
