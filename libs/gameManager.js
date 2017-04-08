@@ -28,8 +28,8 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
                 console.log(cardset.blackCards.length);
                 whiteCards.push(cardset.whiteCards);
                 blackCards.push(cardset.blackCards);
+                index++;
             });
-            index++;
             populateCardArrays()
         } else {
             game = new Game({
