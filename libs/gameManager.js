@@ -92,6 +92,7 @@ module.exports = function(io) {
                     socket.emit('targetGame',game);
                     currentGame = game;
                     socket.join(game._id);
+                    io.in(game._id).emit('playerJoin', {name:socket.id});
                     io.in(game._id).clients(function(err, clients) {
                         if (clients.length == game.playerLimit) {
                             io.in(game._id).emit('gameFull')
@@ -103,6 +104,7 @@ module.exports = function(io) {
         });
         socket.on('gameStart', function() {
             console.log('Game start was requested')
+            gameStart(socket, currentGame);
         })
         socket.on('disconnect', function(data) {
             gameLeave(socket, currentGame)
