@@ -26,7 +26,6 @@ function addCardToCardset(req,res,next) {
         if (err) res.status(503, err);
         if (err) log.error(err);
         Card.findById(req.params.card, function(err, card) {
-            console.log(card);
             if (err) res.status(503, err);
             if (err) log.error(err);
             if (card.type=="white") {cardset.whiteCards.push(card._id)}
