@@ -42,10 +42,10 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
             host: socket.id,
             roomCode: makeid()
         }).save(function (err, game) {
+                if (err) console.log(err);
                 console.log("Created a game: "+game);
                 redis.sadd('game:'+game._id+":blackcards", blackCards);
                 redis.sadd('game:'+game._id+":whitecards", whiteCards);
-                if (err) console.log(err);
                 socket.emit('gameCreated', game)
             })
     });
