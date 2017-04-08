@@ -21,7 +21,7 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
 
     function populateCardArrays() {
         var index = 0;
-        if (index < cardsets.array.length) {
+        if (index < cardsets.length) {
             Cardset.findById(cardsets[i], function(err, cardset) {
                 if (err) console.log(err);
                 console.log(cardset.whiteCards.length);
