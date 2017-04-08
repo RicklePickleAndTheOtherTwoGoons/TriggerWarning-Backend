@@ -18,13 +18,13 @@ console.log(makeid());
 function newGame(socket, cardsets, scorelimit) {
     var whiteCards = [];
     var blackCards = [];
-    cardsets.foreach(function(cardsetId) {
-        Cardset.findById(cardsetId, function(err, cardset) {
+    for (var i=0;i<cardsets.length;i++) {
+        Cardset.findById(cardsets[i], function(err, cardset) {
             if (err) console.log(err);
-            whiteCards+=cardset.whiteCards;
-            blackCards+=cardset.blackCards;
+            whiteCards.push(cardset.whiteCards);
+            blackCards.push(cardset.blackCards);
         })
-    });
+    }
     game = new Game({
         activeCardsets: cardsets,
         whiteCards: whiteCards,
@@ -34,14 +34,19 @@ function newGame(socket, cardsets, scorelimit) {
         roomCode: makeid()
     }).save(function (err, game) {
             if (err) console.log(err);
-            console.log('We made a game: '+game._id)
+            console.log('We made a game: '+game)
         })
 }
+var test={};
+test.id = "4938uf89uwfe";
+
+
+newGame(test,["58e84898d4a1ab001158fc25"]);
 
 
 
 module.exports = function(io) {
     io.on('connection', function (socket) {
-        log.info('New socket connection: '+socket);
+        console.log('New socket connection: '+socket);
     });
 };
