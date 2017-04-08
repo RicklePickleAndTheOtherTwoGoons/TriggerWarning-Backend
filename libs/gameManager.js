@@ -18,39 +18,37 @@ function makeid() {
 function newGame(socket, cardsets, playerLimit, scoreLimit) {
     var whiteCards = [];
     var blackCards = [];
+    var index = 0;
 
-    function populateCardArrays() {
-        var index = 0;
-        if (index < cardsets.length) {
-            Cardset.findById(cardsets[index], function(err, cardset) {
+    async.whilst(function() {
+        return index <= cardsets.length
+    }, function(next) {
+        Cardset.findById(cardsets[index], function(err, cardset) {
+            if (err) console.log(err);
+            console.log(cardset.whiteCards.length);
+            console.log(cardset.blackCards.length);
+            whiteCards.push(cardset.whiteCards);
+            blackCards.push(cardset.blackCards);
+            index++;
+            next()
+        });
+    }, function(err) {
+        if (err) console.log(err);
+        game = new Game({
+            activeCardsets: cardsets,
+            whiteCards: whiteCards,
+            blackCards: blackCards,
+            scoreLimit: scoreLimit || 10,
+            playerLimit: playerLimit || 10,
+            host: socket.id,
+            roomCode: makeid()
+        }).save(function (err, game) {
+                redis.sadd('game:'+game._id+":blackcards", blackCards);
+                redis.sadd('game:'+game._id+":whitecards", whiteCards);
                 if (err) console.log(err);
-                console.log(cardset.whiteCards.length);
-                console.log(cardset.blackCards.length);
-                whiteCards.push(cardset.whiteCards);
-                blackCards.push(cardset.blackCards);
-                index++;
-            });
-            populateCardArrays()
-        } else {
-            game = new Game({
-                activeCardsets: cardsets,
-                whiteCards: whiteCards,
-                blackCards: blackCards,
-                scoreLimit: scoreLimit || 10,
-                playerLimit: playerLimit || 10,
-                host: socket.id,
-                roomCode: makeid()
-            }).save(function (err, game) {
-                    redis.sadd('game:'+game._id+":blackcards", blackCards);
-                    redis.sadd('game:'+game._id+":whitecards", whiteCards);
-                    if (err) console.log(err);
-                    socket.emit('gameCreated', game)
-                })
-        }
-    }
-    populateCardArrays()
-
-
+                socket.emit('gameCreated', game)
+            })
+    });
 }
 
 
