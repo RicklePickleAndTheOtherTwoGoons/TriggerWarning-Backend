@@ -18,6 +18,7 @@ console.log(makeid());
 function newGame(socket, cardsets, scorelimit) {
     var whiteCards = [];
     var blackCards = [];
+    console.log("Socket ID: "+socket.id);
     for (var i=0;i<cardsets.length;i++) {
         Cardset.findById(cardsets[i], function(err, cardset) {
             if (err) console.log(err);
