@@ -2,6 +2,7 @@
  * Created by chandler on 4/7/17.
  */
 var Redis = require('ioredis');
+var async = require('async');
 var redis = new Redis(process.env.redisUrl);
 var Game = require('../models/game.js');
 var Cardset = require('../models/cardset.js');

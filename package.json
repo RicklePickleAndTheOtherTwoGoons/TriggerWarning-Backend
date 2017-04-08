@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/RicklePickleAndTheOtherTwoGoons/TriggerWarning-Backend#readme",
   "dependencies": {
+    "async": "^2.3.0",
     "bunyan": "^1.8.10",
     "ioredis": "^2.5.0",
     "mongoose": "^4.9.3",
