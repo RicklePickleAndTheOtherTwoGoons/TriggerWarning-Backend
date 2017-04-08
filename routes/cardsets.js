@@ -2,6 +2,7 @@
  * Created by chandler on 4/7/17.
  */
 var Cardset = require('../models/cardset.js');
+var Card = require('../models/card.js');
 var Redis = require('ioredis');
 var redis = new Redis(process.env.redisUrl);
 //TODO: dont do this. Properly export logger
@@ -24,11 +25,16 @@ function addCardToCardset(req,res,next) {
     Cardset.findById(req.params.cardset, function(err,cardset) {
         if (err) res.status(503, err);
         if (err) log.error(err);
-        Cardset.findById(req.params.card, function(err, card) {
+        Card.findById(req.params.card, function(err, card) {
+            console.log(card);
             if (err) res.status(503, err);
             if (err) log.error(err);
-            Cardset.cards=Cardset.cards+card._id;
-            res.send(200, cardset)
+            cardset.cards.push(card._id);
+            cardset.save(function(err,cardsetU) {
+                if (err) res.send(503, err)
+                if (err) console.log(err)
+                res.send(200, cardsetU)
+            })
         })
     })
 }
@@ -56,10 +62,10 @@ function readAllCardsets(req, res, next) {
     var query = Cardset.find();
     if (req.query.text) query.where({text: new RegExp(req.query.text, "i")});
     query.limit(req.query.limit || 20);
-    query.exec(function (err, card) {
+    query.exec(function (err, cardsets) {
         if (err) return next(err);
         if (err) log.error(err);
-        res.send(card)
+        res.send(cardsets)
     });
 }
 
