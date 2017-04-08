@@ -48,7 +48,7 @@ newGame(test,["58e84898d4a1ab001158fc25"]);
 module.exports = function(io) {
     io.on('connection', function (socket) {
         console.log('New socket connection: '+socket);
-        socket.on('gameCreate', function(data) {
+        socket.on('roomCreate', function(data) {
             console.log(data)
         })
     });
