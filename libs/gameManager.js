@@ -21,8 +21,6 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
     for (var i=0;i<cardsets.length;i++) {
         Cardset.findById(cardsets[i], function(err, cardset) {
             if (err) console.log(err);
-            console.log(whiteCards.length);
-            console.log(blackCards.length);
             whiteCards.push(cardset.whiteCards);
             blackCards.push(cardset.blackCards);
         })
