@@ -9,7 +9,6 @@ function createCard(req, res, next) {
         text: req.body.text,
         draw: req.body.draw || 0,
         pick: req.body.pick || 1,
-        watermark: req.body.watermark || '',
         type: req.body.type,
         vendor: req.body.vendor || "official"
     });
@@ -40,7 +39,6 @@ function readOneCard(req, res, next) {
 }
 function readAllCards(req, res, next) {
     var query = Card.find();
-    if (req.query.migrateId) query.where({migrateId: req.query.migrateId});
     if (req.query.text) query.where({text: new RegExp(req.query.text, "i")});
     if (req.query.type) query.where({type: req.query.type});
     query.limit(req.query.limit || 20);
