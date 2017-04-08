@@ -34,7 +34,8 @@ function newGame(socket, cardsets, scorelimit) {
         roomCode: makeid()
     }).save(function (err, game) {
             if (err) console.log(err);
-            console.log('We made a game: '+game)
+            console.log('We made a game: '+game);
+            return game
         })
 }
 var test={};
@@ -49,7 +50,8 @@ module.exports = function(io) {
     io.on('connection', function (socket) {
         console.log('New socket connection: '+socket);
         socket.on('roomCreate', function(data) {
-            console.log(data)
+            console.log(data);
+            socket.emit(newGame(socket,data.cardsets,data.playerLimit))
         })
     });
 };
