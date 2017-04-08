@@ -21,6 +21,8 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
     for (var i=0;i<cardsets.length;i++) {
         Cardset.findById(cardsets[i], function(err, cardset) {
             if (err) console.log(err);
+            console.log(whiteCards.length);
+            console.log(blackCards.length);
             whiteCards.push(cardset.whiteCards);
             blackCards.push(cardset.blackCards);
         })
@@ -34,8 +36,8 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
         host: socket.id,
         roomCode: makeid()
     }).save(function (err, game) {
-            redis.sadd('game:'+game._id+":blackcards", blackCards);
-            redis.sadd('game:'+game._id+":whitecards", whiteCards);
+            redis.sadd('game:'+game._id+":blackcards", game.blackCards);
+            redis.sadd('game:'+game._id+":whitecards", game.whiteCards);
             if (err) console.log(err);
             socket.emit('gameCreated', game)
         })
