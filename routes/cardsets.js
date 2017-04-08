@@ -10,7 +10,7 @@ var bunyan = require('bunyan');
 var log = bunyan.createLogger({name:'triggerwarning'});
 
 function createCardset(req, res, next) {
-    console.log("Temp params for John: "+req.params);
+    console.log("Temp params for John: "+req.body);
     cardset = new Cardset({
         name: req.body.name,
         desc: req.body.desc,
