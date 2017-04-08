@@ -45,7 +45,7 @@ function newGame(socket, cardsets, playerLimit, scoreLimit) {
 module.exports = function(io) {
     io.on('connection', function (socket) {
         socket.on('gameCreate', function(data) {
-            newGame(socket, data.cardsets, data.playerLimit, data.scoreLimit);
+            newGame(socket, data.cardSets, data.playerLimit, data.scoreLimit);
         })
     });
 };
