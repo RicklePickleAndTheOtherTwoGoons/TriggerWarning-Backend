@@ -41,5 +41,7 @@ function newGame(socket, cardsets, scorelimit) {
 
 
 module.exports = function(io) {
-
+    io.on('connection', function (socket) {
+        log.info('New socket connection: '+socket);
+    });
 };
