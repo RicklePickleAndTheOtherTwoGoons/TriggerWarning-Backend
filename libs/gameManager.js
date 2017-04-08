@@ -68,13 +68,22 @@ function gameLeave(socket, game) {
 
 function gameStart(io, clients, game) {
     console.log('beginning game start');
-    for (var i=0; i<clients.length;i++) {
-        console.log('starting prep for client: '+clients[i]);
-        redis.spop("game:"+game._id+":whitecards", 10, function(err, cards) {
+    function getCards(gameId, callback) {
+        redis.spop("game:"+gameId+":whitecards", 10, function(err, cards) {
             if (err) console.log(err);
-            console.log(cards);
-            io.to(clients[i]).emit('firstHand', cards);
+            callback(cards)
         })
+    }
+    for (var i=0; i<clients.length;i++) {
+        (function(){
+            var client = clients[i];
+            getCards(game._id, function(data) {
+                io.to(client).emit('firstHand', data);
+            })
+        })();
+        //var client = clients[i];
+        //console.log('starting prep for client: '+clients[i]);
+
     }
 }
 
