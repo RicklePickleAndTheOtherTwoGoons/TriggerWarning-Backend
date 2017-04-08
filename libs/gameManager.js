@@ -51,7 +51,7 @@ module.exports = function(io) {
         console.log('New socket connection: '+socket);
         socket.on('roomCreate', function(data) {
             console.log(data);
-            socket.emit(newGame(socket,data.cardsets,data.playerLimit))
+            socket.emit('roomCreated',newGame(socket,data.cardsets,data.playerLimit))
         })
     });
 };
