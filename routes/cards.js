@@ -6,11 +6,6 @@ var Redis = require('ioredis');
 var redis = new Redis(process.env.redisUrl);
 var Cache = require('../libs/cacheManager.js')
 
-Cache.get("card", "58e89f8746d21c0011cf546a", function(err, data) {
-    if (err) console.log(err)
-    console.log(data)
-})
-
 function createCard(req, res, next) {
     card = new Card({
         text: req.body.text,
@@ -26,22 +21,11 @@ function createCard(req, res, next) {
     })
 }
 function readOneCard(req, res, next) {
-    redis.get('cache:cards:'+req.params.id, function(err, success) {
-        if (err) log.error(err);
-        if (err) res.send(503, 'Request Error')
-        if (success == null) {
-            Card.findById(req.params.id, function(err, card) {
-                if (err) res.status(503, err);
-                if (err) log.error(err);
-                redis.set('cache:cards:'+req.params.id, JSON.stringify(card));
-                redis.expire('cache:cards:'+req.params.id, 43200);
-                res.header('X-Cache', 'Miss');
-                res.send(200, card)
-            })
-        } else {
-            res.header('X-Cache', 'Hit');
-            res.send(200, JSON.parse(success))
-        }
+    Cache.get('card', req.params.id, function(err, card) {
+        if (err) res.send(503, err)
+        if (card.cacheHit) {res.header('X-Cache','Hit')} else {res.header('X-Cache', 'Miss')}
+            res.send(200, card.data)
+
     })
 }
 function readAllCards(req, res, next) {
