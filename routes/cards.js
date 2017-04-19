@@ -4,6 +4,13 @@
 var Card = require('../models/card.js');
 var Redis = require('ioredis');
 var redis = new Redis(process.env.redisUrl);
+var Cache = require('../libs/cacheManager.js')
+
+Cache.get("card", "58e89f8746d21c0011cf546a", function(err, data) {
+    if (err) console.log(err)
+    console.log(data)
+})
+
 function createCard(req, res, next) {
     card = new Card({
         text: req.body.text,
@@ -21,6 +28,7 @@ function createCard(req, res, next) {
 function readOneCard(req, res, next) {
     redis.get('cache:cards:'+req.params.id, function(err, success) {
         if (err) log.error(err);
+        if (err) res.send(503, 'Request Error')
         if (success == null) {
             Card.findById(req.params.id, function(err, card) {
                 if (err) res.status(503, err);
@@ -34,7 +42,6 @@ function readOneCard(req, res, next) {
             res.header('X-Cache', 'Hit');
             res.send(200, JSON.parse(success))
         }
-        res.send(503, 'Request Error')
     })
 }
 function readAllCards(req, res, next) {
@@ -50,6 +57,7 @@ function readAllCards(req, res, next) {
 }
 
 PATH = '/api/cards';
+
 module.exports = function(server) {
     server.post({path: PATH, version: '0.0.1'}, createCard);
     server.get({path: PATH, version: '0.0.1'}, readAllCards);

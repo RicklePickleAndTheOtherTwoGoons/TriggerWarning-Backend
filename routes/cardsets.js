@@ -42,6 +42,7 @@ function addCardToCardset(req,res,next) {
 function readOneCardset(req, res, next) {
     redis.get('cache:cardsets:'+req.params.id, function(err, success) {
         if (err) log.error(err);
+        if (err) res.send(503, 'Request Error')
         if (success == null) {
             var query=Cardset.find();
             query.where({_id: req.params.id});
@@ -58,8 +59,6 @@ function readOneCardset(req, res, next) {
             res.header('X-Cache', 'Hit');
             res.send(200, JSON.parse(success))
         }
-        //TODO: Un-Fuck caching mechanism
-        res.send(503, 'Request Error')
     })
 }
 function readAllCardsets(req, res, next) {
